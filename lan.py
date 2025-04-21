@@ -49,9 +49,9 @@ mimetypes.add_type('application/x-font-ttf', '.ttf')
 app = web.Application()
 app.router.add_get('/', handle)
 app.router.add_static('/static/', path='static', name='static')
-app.router.add_static('/font/',
-                       path='static/font',
-                       name='font')
+# app.router.add_static('/font/',
+#                        path='static/font',
+#                        name='font')
 app.router.add_static('/js/',
                        path='static/js',
                        name='js')
@@ -166,22 +166,28 @@ def kill_all_processes_by_port(port):
 
       kill_process(proc)
 
-    for proc in psutil.process_iter(['pid', 'name', 'connections']):
-      if not proc.info['connections']: continue
-      for conn in proc.info['connections']:
-        print(conn)
-        if conn.laddr.port == port:
-          try:
-            print(f"Found process with PID {proc.pid} and name {proc.info['name']}")
-            kill_process_and_children(proc)
-            killed_any = True
+    for proc in psutil.process_iter(['pid', 'name']):
+      try:
+        conns = proc.connections()
+        if not conns:
+          continue
+        for conn in conns:
+          print(conn)
+          if conn.laddr.port == port:
+            try:
+              print(f"Found process with PID {proc.pid} and name {proc.info['name']}")
+              kill_process_and_children(proc)
+              killed_any = True
 
-          except (PermissionError, psutil.AccessDenied) as e:
-            print(f"Unable to kill process {proc.pid}. The process might be running as another user or root. Try again with sudo")
-            print(str(e))
+            except (PermissionError, psutil.AccessDenied) as e:
+              print(f"Unable to kill process {proc.pid}. The process might be running as another user or root. Try again with sudo")
+              print(str(e))
 
-          except Exception as e:
-            print(f"Error killing process {proc.pid}: {str(e)}")
+            except Exception as e:
+              print(f"Error killing process {proc.pid}: {str(e)}")
+
+      except (psutil.NoSuchProcess, psutil.AccessDenied):
+        continue
 
   elif platform.system() == 'Darwin' or platform.system() == 'Linux':
     command = f"netstat -tlnp | grep {port}"

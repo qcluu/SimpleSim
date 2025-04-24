@@ -57,4 +57,22 @@ class Control():
 
         self.stop_drive()
     
-    
+    def open_arm(self, arm_motor = 2, duration=1.0, speed=50):
+        self.robot.motors[arm_motor] = speed # 50 from the input and positive to close
+        time.sleep(duration)
+        self.robot.motors[arm_motor] = 0 # stops the motor
+
+    def close_arm(self, claw_motor = 2, duration=1.0, speed=50):
+        self.robot.motors[claw_motor] = -speed # -50 from the input and negative to close
+        time.sleep(duration)
+        self.robot.motors[claw_motor] = 0 # stops the motor
+
+    def raise_arm(self, arm_motor = 7, duration=3.0, speed=50):
+        self.robot.motors[arm_motor] = speed
+        time.sleep(duration)
+        self.robot.motors[arm_motor] = 0
+
+    def lower_arm(self, arm_motor = 7, duration=3.0, speed=50):
+        self.robot.motors[arm_motor] = -speed
+        time.sleep(duration)
+        self.robot.motors[arm_motor] = 0

@@ -15,7 +15,7 @@ def localize(color):
     if color is None: return None
 
     detected=detector.detect(
-        cv2.cvtColor(color, cv2.COLOR_BGR2GRAY),
+        cv2.cvtColor(color, cv2.COLOR_BGR2GRAY), 
         estimate_tag_pose=True,
         camera_params=[fx, fy, cx, cy],
         tag_size=1.5

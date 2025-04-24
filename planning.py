@@ -1,3 +1,5 @@
+import time
+
 from localization import Localization
 from controller import Control
 
@@ -28,7 +30,7 @@ class Planning():
         # maybe a time.sleep() or something so that the arm is not raised too quickly
         controller.raise_arm()
 
-        # TODO: is there a way that the robot can check if the coke can is held?
+        # TODO: is there a way that the robot can check if the coke can is held? Like maybe if the claw closes all the way
         held = False
         if held == True:
             return True

@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from cortano import RealsenseCamera, VexV5
 
 from planning import Planning
@@ -29,8 +30,8 @@ if __name__ == "__main__":
 
     if state == State.CLAW_EMPTY:
       # refresh map
-      # is this state same as to coke can?
-      state = State.TO_COKE_CAN
+      if planning.get_plan_to_origin_point():
+        state = State.TO_COKE_CAN
 
     elif state == State.TO_COKE_CAN:
       # refresh map

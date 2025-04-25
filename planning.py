@@ -7,6 +7,16 @@ controller = Control()
 localization = Localization()
 
 class Planning():
+    def get_plan_to_origin_point():
+        origin = (0,0)
+        robot_position_info = Localization.get_robot_position()
+        controller.send_to_XY(origin.x, origin.y)
+        if robot_position_info.x == origin.x & robot_position_info.y == origin.y:
+            return True
+        else:
+            return False
+        # maybe need to turn the robot too?
+
     def get_plan_to_nearest_enemy_coke():
         robot_position_info = Localization.get_robot_position()
         coke_can_position_info = Localization.get_nearest_coke_can_on_enemy_side()
@@ -44,10 +54,6 @@ class Planning():
         # TODO: what is the format of goal area landmarks and how to check if robot inside
         # return true if robot is inside
     
-    def get_release_and_knock_over_can_plan():
-        controller.open_arm() # hopefully can will drop and tip over
-        
-        # reset the robot arm
-        controller.lower_arm()
+ 
 
         return True

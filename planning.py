@@ -1,4 +1,5 @@
 import time
+import numpy as np
 
 from localization import Localization
 from controller import Control
@@ -8,13 +9,25 @@ localization = Localization()
 
 class Planning():
     def get_plan_to_origin_point():
-        origin = (0,0)
-        robot_position_info = Localization.get_robot_position()
-        controller.send_to_XY(origin.x, origin.y)
-        if robot_position_info.x == origin.x & robot_position_info.y == origin.y:
-            return True
-        else:
-            return False
+        starting_point_to_field = (24,60,-180)
+        robot_to_field = Localization.get_robot_to_field_position()
+
+        #need to calculate the robots position to the origin point
+        if robot_to_field is None:
+            print("error getting robot to field data")
+            return None
+
+        # Compute Robot -> Origin transformation
+        field_to_starting_point = np.linalg.inv(starting_point_to_field)
+        robot_to_starting_point = field_to_starting_point @ robot_to_field
+
+        # Extract robot's current position relative to the origin
+        x = robot_to_origin[0, 3]
+        y = -robot_to_origin[1, 3]  # Negate Y if your field coordinates require it
+
+        print(f"Navigating robot to origin: x={x:.2f}, y={y:.2f}")
+        controller.send_to_XY(x, y)
+
         # maybe need to turn the robot too?
 
     def get_plan_to_nearest_enemy_coke():
@@ -33,7 +46,7 @@ class Planning():
             return True
         else:
             return False
-        
+         
     def get_pickup_coke_can_plan():
         controller.close_arm()
         # robot needs to close the arm first and hold the close arm button?

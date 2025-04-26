@@ -3,6 +3,7 @@ import time
  
 class Control():
     def send_to_XY(self, target_x, target_y, left_motor=0, right_motor=9):
+        # TODO: tune these parameters 
         Kp_dist = 6
         Ki_dist = 0.01
         Kd_dist = 0.00  # 0.1
